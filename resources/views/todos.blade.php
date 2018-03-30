@@ -1,25 +1,28 @@
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Todo App</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-   
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <h1>Todos Page</h1>
-                @foreach($todos as $todo)
-                {{$todo->todo}}
-            </br></br>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+@extends('layout')
+
+@section('input')
+
+<form action="{{ route('create') }}" method="post" class="form-group">
+        <input type="text" class="form-control input-lg" name="todo" placeholder="Create a new Todo">
+        {{ csrf_field() }}
+</form>
+@stop  
+
+@section('content')
+
+@foreach($todos as $todo)
+    {{$todo->todo}}
+    </br>
+    {{date("h:m d-m-Y  ", strtotime( $todo->updated_at))}}
+    <a href="{{route('todo.delete',['id'=>$todo->id])}}" class="btn btn-danger">x</a>
+    |<a href="{{route('todo.update',['id'=>$todo->id])}}" class="btn btn-xs btn-warning">update</a>
+    @if(!$todo->completed)
+    |<a href="{{route('todo.completed',['id'=>$todo->id])}}" class="btn btn-xs btn-success">mark as completed</a>
+    @else
+    |<a href="{{route('todo.markAgain',['id'=>$todo->id])}}" class="btn btn-xs btn-info">mark as uncompleted</a>
+    <span class="text-success">Completed ..!</span>
+    @endif
+    </br><hr>
+    @endforeach
+@stop
+              
