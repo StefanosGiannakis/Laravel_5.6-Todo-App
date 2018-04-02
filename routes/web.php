@@ -14,6 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Auth::routes();
+Route::group(['middleware' => ['auth']], function () {
 Route::get('/new', 'PageController@new');
 Route::get('/todos', 'TodosController@index')->name('todos');
 
@@ -24,3 +26,7 @@ Route::get('/todos/update/{id}','TodosController@update')->name('todo.update');
 Route::post('/todos/save/{id}','TodosController@save')->name('todo.save');
 Route::get('/todos/completed/{id}','TodosController@completed')->name('todo.completed');
 Route::get('/todos/mark/{id}','TodosController@mark')->name('todo.markAgain');
+
+
+Route::get('/home', 'HomeController@index')->name('home');
+});

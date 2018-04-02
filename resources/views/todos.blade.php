@@ -1,7 +1,16 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('input')
-
+{{-- Errors of validation --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <form action="{{ route('create') }}" method="post" class="form-group">
         <input type="text" class="form-control input-lg" name="todo" placeholder="Create a new Todo">
         {{ csrf_field() }}

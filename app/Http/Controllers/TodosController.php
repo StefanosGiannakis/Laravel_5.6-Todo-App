@@ -4,22 +4,27 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\Todo;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodosController extends Controller
 {
     public function index()
     {
         //$todos=Todo::all();
-        $todos=Todo::orderBy('created_at','desc')->get();
+        $todos=Todo::where('userId',Auth::user()->id)->orderBy('created_at','desc')->get();
 
         return view('todos')->with('todos',$todos);
     }
     public function create(Request $request)
     {
        //dd( $request->all());
-       
+        $this->validate($request,[
+            'todo'=>'required'
+        ]);
         $todo= new Todo;
+        $todo->userId=Auth::user()->id;
         $todo->todo=$request->todo;
         $todo->save();
 
@@ -40,13 +45,16 @@ class TodosController extends Controller
     public function update($id)
     {
         //dd($id);
-
+        
         $todo=Todo::find($id);
         Session::flash('info','Now you can update your Todo');
         return view('update')->with('todo',$todo);  
     }
     public function save(Request $request, $id)
     {
+        $this->validate($request,[
+            'todo'=>'required'
+        ]);
        //dd($id);
         $todo=Todo::find($id);
         $todo->todo=$request->todo;
